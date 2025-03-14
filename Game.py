@@ -41,6 +41,7 @@ while input_active:
     for event in pygame.event.get():
         # Allows game to be closed
         if event.type == pygame.QUIT:
+            pygame.quit()
             sys.exit(0)
         elif event.type == pygame.KEYDOWN: # If pygame event is keydown
             if event.key == pygame.K_RETURN: # If return is pressed, check for conditions
@@ -66,68 +67,83 @@ while input_active:
 
     screen.fill(black)
 
+    # Blit text
     text = font.render("Please enter your name here", True, white)
     screen.blit(text, (150, 230))
 
     text = font.render(inputted_text, True, white)
     screen.blit(text, (150, 280))
 
-    pygame.display.flip()
+    pygame.display.flip() # Update display
+    clock.tick(60) # Set fps
 
 
-while True:
-    # Intro messages
-    screen.fill(black)
-    text = font.render(f"Alright hi {inputted_text},", True, white)
-    screen.blit(text, (130, 230))
-    text = font.render("Yuan has lost his girlfriend Trista", True, white)
-    screen.blit(text, (130, 280))
-    text = font.render("You gotta go find her", True, white)
-    screen.blit(text, (130, 330))
-    pygame.display.flip()
-    time.sleep(5)
 
-    screen.fill(black)
-    text = font.render("But the only issue is that", True, white)
-    screen.blit(text, (130, 230))
-    text = font.render("the person you find might be Cody,", True, white)
-    screen.blit(text, (130, 280))
-    text = font.render("and Yuan really doesn't want to", True, white)
-    screen.blit(text, (130, 330))
-    text = font.render("date Cody", True, white)
-    screen.blit(text, (130, 380))
-    pygame.display.flip()
-    time.sleep(5)
+intro_running = True
+start_time = pygame.time.get_ticks() # Get tick at time of loop start
+
+while intro_running:
+
+    for event in pygame.event.get():
+        # Allows game to be closed
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit(0)
+
+
+    time_elapsed = pygame.time.get_ticks() # Get surrent running time
+    running_time = time_elapsed - start_time # Make running_time the time the loop has been running
 
     screen.fill(black)
-    text = font.render("Yuan so stinky he leaves a", True, white)
-    screen.blit(text, (130, 230))
-    text = font.render("trail of gross slob behind him.", True, white)
-    screen.blit(text, (130, 280))
-    text = font.render("It reveals anyone caught in it,", True, white)
-    screen.blit(text, (130, 330))
-    text = font.render("use it to find his girlfriend", True, white)
-    screen.blit(text, (130, 380))
-    pygame.display.flip()
-    time.sleep(5)
 
-    screen.fill(black)
-    text = font.render("After the search timer ends, you", True, white)
-    screen.blit(text, (130, 230))
-    text = font.render("will be presented with an option", True, white)
-    screen.blit(text, (130, 280))
-    text = font.render("between Trista or Cody, pick the", True, white)
-    screen.blit(text, (130, 330))
-    text = font.render("person you saw while searching", True, white)
-    screen.blit(text, (130, 380))
-    pygame.display.flip()
-    time.sleep(5)
+    if running_time > 200 and running_time < 4000:
+        text = font.render(f"Alright hi {inputted_text},", True, white)
+        screen.blit(text, (130, 230))
+        text = font.render("Yuan has lost his girlfriend Trista", True, white)
+        screen.blit(text, (130, 280))
+        text = font.render("You gotta go find her", True, white)
+        screen.blit(text, (130, 330))
 
-    screen.fill(black)
-    text = font.render("(Move with A, D and Spacebar btw)", True, white)
-    screen.blit(text, (130, 230))
-    pygame.display.flip()
-    time.sleep(2)
+    elif running_time > 4000 and running_time < 8000:
+        text = font.render("But the only issue is that", True, white)
+        screen.blit(text, (130, 230))
+        text = font.render("the person you find might be Cody,", True, white)
+        screen.blit(text, (130, 280))
+        text = font.render("and Yuan really doesn't want to", True, white)
+        screen.blit(text, (130, 330))
+        text = font.render("date Cody", True, white)
+        screen.blit(text, (130, 380))
+
+    elif running_time > 8000 and running_time < 12000:
+        text = font.render("Yuan so stinky he leaves a", True, white)
+        screen.blit(text, (130, 230))
+        text = font.render("trail of gross slob behind him.", True, white)
+        screen.blit(text, (130, 280))
+        text = font.render("It reveals anyone caught in it,", True, white)
+        screen.blit(text, (130, 330))
+        text = font.render("use it to find his girlfriend", True, white)
+        screen.blit(text, (130, 380))
+
+
+    elif running_time > 12000 and running_time < 16000:
+        text = font.render("After the search timer ends, you", True, white)
+        screen.blit(text, (130, 230))
+        text = font.render("will be presented with an option", True, white)
+        screen.blit(text, (130, 280))
+        text = font.render("between Trista or Cody, pick the", True, white)
+        screen.blit(text, (130, 330))
+        text = font.render("person you saw while searching", True, white)
+        screen.blit(text, (130, 380))
+
+    if running_time > 16000 and running_time < 18000:
+        text = font.render("(Move with A, D and Spacebar btw)", True, white)
+        screen.blit(text, (130, 230))
+    
+    if running_time > 18000:
+        intro_running = False
+
+    pygame.display.flip() # Update display
+    clock.tick(60) # Set fps
 
 
 while True:
@@ -166,6 +182,7 @@ while True:
         for event in pygame.event.get():
             # Allows game to be closed
             if event.type == pygame.QUIT:
+                pygame.quit()
                 sys.exit(0)
             # Looks for space bar press
             if event.type == pygame.KEYDOWN:
@@ -231,19 +248,12 @@ while True:
     button2_x = 480
     button2_y = 250
 
-    def win_message(x, y, text):
-            screen.fill(black)
-            text = big_font.render(text, True, white)
-            screen.blit(text, (x, y))
-            pygame.display.flip()
-            time.sleep(2)
-
-    def lose_message(x, y, text):
-            screen.fill(black)
-            text = big_font.render(text, True, white)
-            screen.blit(text, (x, y))
-            pygame.display.flip()
-            time.sleep(2)
+    def end_message(x, y, text):
+        screen.fill(black)
+        text = big_font.render(text, True, white)
+        screen.blit(text, (x, y))
+        pygame.display.flip()
+        time.sleep(3)
 
     button_loop = True
     while button_loop:
@@ -271,18 +281,18 @@ while True:
             # Detect mouse click on buttons
             if event.type == pygame.MOUSEBUTTONDOWN and mouse_pos_x >= button_x and mouse_pos_x <= button_x + button_width and mouse_pos_y >= button_y and mouse_pos_y <= button_y + button_height:
                 if selected_person == people_list[0]: # Show win message if correct button is clicked
-                    win_message(180, 300, "Wow gj you win")
+                    end_message(180, 300, "Wow gj you win")
                     button_loop = False
                 else: # Show lose message if wrong button is clicked
-                    lose_message(200, 300, "Wow you suck")
+                    end_message(200, 300, "Wow you suck")
                     button_loop = False
 
             if event.type == pygame.MOUSEBUTTONDOWN and mouse_pos_x >= button2_x and mouse_pos_x <= button2_x + button_width and mouse_pos_y >= button2_y and mouse_pos_y <= button2_y + button_height:
                 if selected_person == people_list[1]:
-                    win_message(180, 300, "Wow gj you win")
+                    end_message(180, 300, "Wow gj you win")
                     button_loop = False
                 else:
-                    lose_message(200, 300, "Wow you suck")
+                    end_message(200, 300, "Wow you suck")
                     button_loop = False
 
         pygame.display.flip()
