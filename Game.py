@@ -94,7 +94,7 @@ while input_active:
 
     # Blit text
     message(default_text_y, "Welcome to Yuans Love Life")
-    message(default_text_y + text_spacing, "Please enter your name down here")
+    message(default_text_y + text_spacing, "Please enter your name to begin")
     message(default_text_y + text_spacing * 2, "V")
 
     # Show what the user has typed
@@ -198,21 +198,23 @@ while True:
     player_image = pygame.transform.scale(player_image, (player_width, player_height))
 
     # Player movement
-    gravity = 10
     player_speed = 10
-    jump_time = 0
-    jump_strength = 35
-    duration_of_jump = 10
+
+    jump_gravity = 1.8
+    jump_height = 25
+    jump_strength = 0
+    falling_max_velocity = 30
+
 
     # Player Trail
     trail = []
 
     # Timer stuff
-    timer_duration = 300
+    timer_duration = 600
 
     # Random text and random text locations
     people_list = ["Cody", "Trista"] # List containing 2 names
-    text_x = random.randint(50, 850)
+    text_x = random.randint(20, 820)
     text_y = random.randint(30, 670)
     selected_person = random.choice(people_list)
 
@@ -228,7 +230,7 @@ while True:
             # Looks for space bar press for jump
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    jump_time = duration_of_jump
+                    jump_strength = jump_height
         
         # Side to side movement
         key_pressed = pygame.key.get_pressed()
@@ -237,16 +239,20 @@ while True:
         if key_pressed[pygame.K_d] and player_x < screen_width - player_width:
             player_x += player_speed
 
-        # Jump if jump_time is greater than 0
-        if jump_time > 0:
-            player_y -= jump_strength
-            jump_time -= 1
-        if player_y < 0:
-            jump_time = 0
-        
-        # Gravity
-        if player_y < screen_height - player_height:
-            player_y += gravity
+        # Code for jump
+        player_y -= jump_strength # Move player up
+        if jump_strength > -falling_max_velocity: # Limits falling speed
+            jump_strength -= jump_gravity
+
+        # Prevents player from landing under the screen
+        if player_y > screen_height - player_height:
+            player_y = screen_height - player_height
+            jump_strength = 0
+
+        # Prevents player from going above the screen
+        elif player_y < 0:
+            player_y = 0
+            jump_strength = 0
 
         # Fill screen with background colour
         screen.fill(hoshino_pink)
