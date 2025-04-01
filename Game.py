@@ -4,6 +4,8 @@ he must go find her.
 Yuan leaves a nasty stink trail behind him that reveals whoever's caught in it.
 Use A, D and SPACE to run around and locate people.
 But be careful, the person you find could also be Cody, and Yuan doesn't want him to be his girlfriend.
+
+(Full permissions to make this game and use these images were granted by the Yuan Dong himself)
 '''
 # Import libraries
 import pygame
@@ -43,16 +45,13 @@ def message(y, text):
     text_pos = text.get_rect(center = (screen_width / 2, y))
     screen.blit(text, (text_pos))
 
-# 2 Names used in the game
-people_list = ["Cody", "Trista"]
-
 
 def get_username(): # Function to get username
 
     # Text input stuff
     inputted_text = ""
     input_active = True
-    banned_names = ["yuan", "yuan dong", "yu an", "dong", "yuans dongy", "dongy", "yuans"]
+    banned_names = ["yuan", "yuan dong", "yu an", "dong", "yuans dongy", "dongy", "yuans", "yuandong"]
     max_name_length = 12 # Longest name allowed
     max_input_length = 45 # Max amount of characters allowed to be typed in the text box
 
@@ -192,7 +191,78 @@ def intro(username): # Function to show intro messages
         pygame.display.flip() # Update display
         clock.tick(60) # Set fps
 
-def game(): # Function for the actual game
+# Names of difficulties
+difficulty_names = ["Easy", "Medium", "Hard"]
+def difficulty_select():
+    # Button stuff
+    button_width = 200
+    button_height = 100
+
+    # Load background image
+    buttons_background = pygame.image.load("yuanbackground.jpg")
+    buttons_background = pygame.transform.scale(buttons_background, (screen_width, screen_height))
+
+    button_y_pos = [150, 300, 450]
+
+    # Button colour
+    transparent_white = (255, 255, 255, 100)
+
+    button_loop = True
+    # Loop for buttons
+    while button_loop:
+
+        # Blit background image
+        screen.blit(buttons_background, (0, 0))
+
+
+        for i in range(len(difficulty_names)): # For number of things in the list
+            text = difficulty_names[i] # Assign the string to text
+            button_y = button_y_pos[i] # Assign y position from button_y_pos list to button_y
+            button_x = (screen_width - button_width) // 2 # Center button to screen
+            button_rect = pygame.Rect(button_x, button_y, button_width, button_height) # Make the button dimensions button_rect
+
+            if button_rect.collidepoint(pygame.mouse.get_pos()): # If mouse position is over the button
+                button_colour = white
+            else:
+                button_colour = transparent_white
+
+            # Draw boxes for buttons
+            button_surface = pygame.Surface((button_width, button_height), pygame.SRCALPHA) # Make new surface that allows opacity
+            button_surface.fill(button_colour) # Fills the buttons in
+            screen.blit(button_surface, (button_x, button_y)) # Blits the buttons onto the surface
+
+            text = font.render(difficulty_names[i], True, black) # Render text on button
+            text_pos = text.get_rect(center = (button_x + button_width // 2, button_y + button_height // 2)) # Set text location to be in middle of button box
+            screen.blit(text, (text_pos)) # Blit text at that position
+
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT: # Allows game to be closed
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN: # When mouse clicks
+                mouse_pos = pygame.mouse.get_pos() # Get position of mouse
+                for i in range(len(difficulty_names)): # For number of names in list
+                    button_y = button_y_pos[i]
+                    button_x = (screen_width - button_width) // 2
+                    button_rect = pygame.Rect(button_x, button_y, button_width, button_height) 
+
+                    if button_rect.collidepoint(mouse_pos): # If the position of the mouse collides with the button rect
+                        if difficulty_names[i] == difficulty_names[0]:
+                            return difficulty_names[i]
+                        elif difficulty_names[i] == difficulty_names[1]:
+                            return difficulty_names[i]
+                        elif difficulty_names[i] == difficulty_names[2]:
+                            return difficulty_names[i]
+
+        pygame.display.flip()
+
+        clock.tick(60)
+
+# 2 Names used in the game
+people_list = ["Cody", "Trista"]
+def game(difficulty): # Function for the actual game
     # Player stuffs like width and position
     player_x = 100
     player_y = 400
@@ -217,7 +287,12 @@ def game(): # Function for the actual game
     trail_length = 13
 
     # Timer stuff
-    timer_duration = 100
+    if difficulty == difficulty_names[0]:
+        timer_duration = 600
+    elif difficulty == difficulty_names[1]:
+        timer_duration = 400
+    elif difficulty == difficulty_names[2]:
+        timer_duration = 300
 
     # Random text and random text locations
     text_x = random.randint(20, 820)
@@ -382,7 +457,7 @@ def buttons(selected_person): # Function to show buttons
 
         clock.tick(60)
 
-def restart(): # Function for replay screen
+def replay(): # Function for replay screen
     restart_loop = True
     # Loop for restart button
     while restart_loop:
@@ -407,7 +482,8 @@ username = get_username()
 intro(username)
 
 while True:
-    selected_person = game()
+    selected_difficulty = difficulty_select()
+    selected_person = game(selected_difficulty)
     buttons(selected_person)
 
-    restart()
+    replay()
