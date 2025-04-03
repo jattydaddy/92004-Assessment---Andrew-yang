@@ -42,7 +42,7 @@ text_spacing = 50 # Vertical text offset
 # Define text displayed in center of screen
 def message(y, text):
     text = font.render(text, True, white)
-    text_pos = text.get_rect(center = (screen_width / 2, y))
+    text_pos = text.get_rect(center = (screen_width // 2, y))
     screen.blit(text, (text_pos))
 
 
@@ -60,13 +60,13 @@ def get_username(): # Function to get username
     input_box_spacing = 20 # Space between input box and text inside
     
     # Define message for when input is denied
-    def denied_input(y, text):
+    def denied_input(text):
         screen.fill(black)
         text = font.render(text, True, white)
-        text_pos = text.get_rect(center = (screen_width / 2, y + text_spacing * 2))
+        text_pos = text.get_rect(center = (screen_width // 2, screen_height // 2))
         screen.blit(text, (text_pos))
         pygame.display.flip()
-        time.sleep(3)
+        time.sleep(2)
 
     # Loop to get name of user
     while input_active:
@@ -79,16 +79,16 @@ def get_username(): # Function to get username
             elif event.type == pygame.KEYDOWN: # If pygame event is keydown
                 if event.key == pygame.K_RETURN: # If return is pressed, check for conditions
                     if len(inputted_text) > max_name_length: # Show message if length of user input is longer than 12
-                        denied_input(default_text_y, "Too long, keep it under 12")
+                        denied_input("Too long, keep it under 12")
 
                     elif len(inputted_text) <= 0: # Show message if length of user input is same or shorter than 0 somehow
-                        denied_input(default_text_y, "You need a name")
+                        denied_input("You need a name")
 
                     elif inputted_text.lower() in banned_names: # Show message if name is in banned_names list
-                        denied_input(default_text_y, "Nah you cant play")
+                        denied_input("Nah you cant play")
                         
                     else:
-                        return inputted_text # Save text to username
+                        return inputted_text # Return inputted text
 
                     inputted_text = "" # Reset inputted text after pressing enter
 
@@ -106,7 +106,7 @@ def get_username(): # Function to get username
             input_box_height = text_height + input_box_spacing
         
             # Input box location
-            textbox_x = (screen_width - input_box_width) / 2 # Centers textbox
+            textbox_x = (screen_width - input_box_width) // 2 # Centers textbox
             textbox_y = default_text_y + text_spacing * 3 - 25
 
             # Draw input box
@@ -202,7 +202,7 @@ def difficulty_select():
     buttons_background = pygame.image.load("yuanbackground.jpg")
     buttons_background = pygame.transform.scale(buttons_background, (screen_width, screen_height))
 
-    button_y_pos = [150, 300, 450]
+    button_y_pos = [180, 330, 480]
 
     # Button colour
     transparent_white = (255, 255, 255, 100)
@@ -213,6 +213,11 @@ def difficulty_select():
 
         # Blit background image
         screen.blit(buttons_background, (0, 0))
+
+        # Draw text
+        text = big_font.render("Choose the difficulty", True, white)
+        text_pos = text.get_rect(center = (screen_width // 2, screen_width // 10))
+        screen.blit(text, (text_pos))
 
 
         for i in range(len(difficulty_names)): # For number of things in the list
@@ -243,7 +248,7 @@ def difficulty_select():
 
             if event.type == pygame.MOUSEBUTTONDOWN: # When mouse clicks
                 mouse_pos = pygame.mouse.get_pos() # Get position of mouse
-                for i in range(len(difficulty_names)): # For number of names in list
+                for i in range(len(difficulty_names)):
                     button_y = button_y_pos[i]
                     button_x = (screen_width - button_width) // 2
                     button_rect = pygame.Rect(button_x, button_y, button_width, button_height) 
@@ -257,7 +262,6 @@ def difficulty_select():
                             return difficulty_names[i]
 
         pygame.display.flip()
-
         clock.tick(60)
 
 # 2 Names used in the game
@@ -360,101 +364,95 @@ def game(difficulty): # Function for the actual game
 
         # Update the screen
         pygame.display.flip()
+        clock.tick(60) # Set fps
 
-        # Set fps
-        clock.tick(60)
     return selected_person
 
 def buttons(selected_person): # Function to show buttons
     # Button stuff
     button_width = 300
     button_height = 150
-
-    # First button location
-    button_x = 110
     button_y = 250
-
-    # Second button location
-    button2_x = 480
-    button2_y = 250
-
-    # Button colour
-    transparent_white = (255, 255, 255, 100)
-
-    # Define ending message
-    def end_message(text):
-        screen.fill(black)
-        text = big_font.render(text, True, white)
-        text_pos = text.get_rect(center = (screen_width / 2, screen_height / 2))
-        screen.blit(text, (text_pos))
-        pygame.display.flip()
-        time.sleep(3)
+    button_x_pos = [110, 480]
+    button_options = [people_list[0], people_list[1]]
 
     # Load background image
     buttons_background = pygame.image.load("yuanbackground.jpg")
     buttons_background = pygame.transform.scale(buttons_background, (screen_width, screen_height))
 
+    # Button colour
+    transparent_white = (255, 255, 255, 100)
+
+    # Define ending message
+    def end_message(text, text2):
+        screen.fill(black)
+        text = big_font.render(text, True, white)
+        text_pos = text.get_rect(center = (screen_width // 2, screen_height // 2 - text_spacing))
+        screen.blit(text, (text_pos))
+
+        text2 = big_font.render(text2, True, white)
+        text2_pos = text2.get_rect(center = (screen_width // 2, screen_height // 2 + text_spacing))
+        screen.blit(text2, (text2_pos))
+
+        pygame.display.flip()
+        time.sleep(2)
+        
+
+
     button_loop = True
     # Loop for buttons
     while button_loop:
 
-        # Make boxes turn solid when hovering over with mouse
-        if pygame.Rect(button_x, button_y, button_width, button_height).collidepoint(pygame.mouse.get_pos()):
-            button1_colour = white
-        else:
-            button1_colour = transparent_white
-
-        if pygame.Rect(button2_x, button2_y, button_width, button_height).collidepoint(pygame.mouse.get_pos()):
-            button2_colour = white
-        else:
-            button2_colour = transparent_white
-
         # Blit background image
         screen.blit(buttons_background, (0, 0))
 
-        # Draw boxes for buttons
-        button_surface1 = pygame.Surface((button_width, button_height), pygame.SRCALPHA)
-        button_surface1.fill(button1_colour)
-        screen.blit(button_surface1, (button_x, button_y))
 
-        button_surface2 = pygame.Surface((button_width, button_height), pygame.SRCALPHA)
-        button_surface2.fill(button2_colour)
-        screen.blit(button_surface2, (button2_x, button2_y))
+        for i in range(len(button_options)): # For number of things in the list
+            text = button_options[i] # Assign the string to text
+            button_x = button_x_pos[i] # Go through list of x coords
+            button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
 
-        # Blit text onto the buttons
-        choice1 = big_font.render(f"{people_list[0]}", True, black)
-        choice1_rect = choice1.get_rect(center = (button_x + button_width // 2, button_y + button_height // 2))
-        screen.blit(choice1, (choice1_rect))
+            if button_rect.collidepoint(pygame.mouse.get_pos()): # If mouse position is over the button
+                button_colour = white
+            else:
+                button_colour = transparent_white
 
-        choice2 = big_font.render(f"{people_list[1]}", True, black)
-        choice2_rect = choice2.get_rect(center = (button2_x + button_width // 2, button2_y + button_height // 2))
-        screen.blit(choice2, (choice2_rect))
+            # Draw boxes for buttons
+            button_surface = pygame.Surface((button_width, button_height), pygame.SRCALPHA) # Make new surface that allows opacity
+            button_surface.fill(button_colour) # Fills the buttons in
+            screen.blit(button_surface, (button_x, button_y)) # Blits the buttons onto the surface
+
+            text = big_font.render(people_list[i], True, black) # Render text on button
+            text_pos = text.get_rect(center = (button_x + button_width // 2, button_y + button_height // 2)) # Set text location to be in middle of button box
+            screen.blit(text, (text_pos)) # Blit text at that position
 
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT: # Allows game to be closed
                 pygame.quit()
                 sys.exit()
-            
-            # Detect mouse click on buttons
-            elif event.type == pygame.MOUSEBUTTONDOWN and pygame.Rect(button_x, button_y, button_width, button_height).collidepoint(pygame.mouse.get_pos()):
-                if selected_person == people_list[0]: # Show win message if correct button is clicked
-                    end_message("Wow gj you win")
-                    button_loop = False
-                else: # Show lose message if wrong button is clicked
-                    end_message("Wow you suck")
-                    button_loop = False
 
-            elif event.type == pygame.MOUSEBUTTONDOWN and pygame.Rect(button2_x, button2_y, button_width, button_height).collidepoint(pygame.mouse.get_pos()):
-                if selected_person == people_list[1]:
-                    end_message("Wow gj you win")
-                    button_loop = False
-                else:
-                    end_message("Wow you suck")
-                    button_loop = False
+            if event.type == pygame.MOUSEBUTTONDOWN: # When mouse clicks
+                mouse_pos = pygame.mouse.get_pos() # Get position of mouse
+                for i in range(len(button_options)): # For number of names in list
+                    button_x = button_x_pos[i]
+                    button_rect = pygame.Rect(button_x, button_y, button_width, button_height) 
 
+                    if button_rect.collidepoint(mouse_pos): # If the position of the mouse collides with the button rect
+                        if button_options[i] == selected_person:
+                            end_message("you win", "yuan dong is proud")
+                            button_loop = False
+
+
+                        elif button_options[i] == selected_person:
+                            end_message("you win", "yuan dong is proud")
+                            button_loop = False
+
+                        else:
+                            end_message("you lose, yuan dong", "is disappointed")                       
+                            button_loop = False
+                            
         pygame.display.flip()
-
         clock.tick(60)
 
 def replay(): # Function for replay screen
@@ -471,7 +469,7 @@ def replay(): # Function for replay screen
         screen.fill(black)
 
         text = big_font.render("Click to play again", True, white)
-        text_pos = text.get_rect(center = (screen_width / 2, screen_height / 2))
+        text_pos = text.get_rect(center = (screen_width // 2, screen_height // 2))
         screen.blit(text, (text_pos))
 
         pygame.display.flip()
