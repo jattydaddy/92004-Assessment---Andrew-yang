@@ -267,7 +267,7 @@ def difficulty_select():
 # 2 Names used in the game
 people_list = ["Cody", "Trista"]
 def game(difficulty): # Function for the actual game
-    # Player stuffs like width and position
+    # Player stuffs like size and position
     player_x = 100
     player_y = 400
     player_width = 90
@@ -290,17 +290,22 @@ def game(difficulty): # Function for the actual game
     trail = []
     trail_length = 13
 
-    # Timer stuff
+    # Difficulty stuff
+    easy = 600 # Game timer for each difficulty
+    medium = 400
+    hard = 300
+
     if difficulty == difficulty_names[0]:
-        timer_duration = 600
+        timer_duration = easy
     elif difficulty == difficulty_names[1]:
-        timer_duration = 400
+        timer_duration = medium
     elif difficulty == difficulty_names[2]:
-        timer_duration = 300
+        timer_duration = hard
 
     # Random text and random text locations
-    text_x = random.randint(20, 820)
-    text_y = random.randint(30, 670)
+    random_text_spacing = 80 # Spacing between text and edge of screen
+    text_x = random.randint(0 + random_text_spacing, screen_width - random_text_spacing)
+    text_y = random.randint(0+ random_text_spacing, screen_height - random_text_spacing)
     selected_person = random.choice(people_list)
 
 
